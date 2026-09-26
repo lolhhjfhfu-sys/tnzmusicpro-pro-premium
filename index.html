@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>tnzmusicpro — музыка ночью</title>
+
+<style>
+:root{--bg:#08090d;--panel:rgba(18,20,27,.88);--panel2:#20232e;--text:#f7f7fa;--muted:#8e94a5;--accent:#ffd21f;--accent2:#ffb900;--line:rgba(255,255,255,.09);--shadow:0 18px 50px rgba(0,0,0,.32)}
+*{box-sizing:border-box}html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;overflow-x:hidden}button,input{font:inherit}button{cursor:pointer;touch-action:manipulation}
+#space{position:fixed;inset:0;z-index:-5}.bg-image{position:fixed;inset:0;background-size:cover;background-position:center;opacity:.17;z-index:-4;transition:opacity .4s}.bg-image:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#05060ae8,#08090dbb,#05060ae8)}
+.noise{display:none}.app{display:flex;min-height:100vh}
+.side{width:235px;position:fixed;inset:0 auto 0 0;padding:23px 12px;background:rgba(8,9,13,.93);border-right:1px solid var(--line);z-index:20}.brand{font-size:24px;font-weight:900;letter-spacing:-1px;padding:5px 12px 30px}.brand span{color:var(--accent)}.nav-title{font-size:10px;color:#606676;text-transform:uppercase;letter-spacing:1.5px;padding:0 12px 8px}.nav{display:grid;gap:3px}.nav button{border:0;background:transparent;color:#9298a8;text-align:left;border-radius:10px;padding:10px 12px;font-size:14px;transition:.18s}.nav button:hover,.nav button.active{background:#181b24;color:#fff}.nav button.active{box-shadow:inset 2px 0 var(--accent)}
+.main{margin-left:235px;width:calc(100% - 235px);padding:20px 28px 140px;max-width:1500px}.top{display:flex;align-items:center;gap:10px;margin-bottom:18px}.search{flex:1;background:#11131a;border:1px solid var(--line);border-radius:13px;padding:12px 15px;color:#fff;outline:none}.top-spacer{flex:1}.smallbtn{background:#11131a;border:1px solid var(--line);color:#fff;padding:10px 13px;border-radius:11px}
+.hero{min-height:420px;border:1px solid var(--line);border-radius:25px;position:relative;overflow:hidden;background:linear-gradient(135deg,#171923,#0c0e14 58%,#171522);display:flex;align-items:flex-end;padding:38px;box-shadow:var(--shadow)}.hero:before{content:"";position:absolute;width:360px;height:360px;right:-100px;top:-130px;border-radius:50%;background:radial-gradient(circle,#6475ff55,transparent 67%);filter:blur(10px)}.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#05060add,transparent 65%)}.hero-content{position:relative;z-index:2;max-width:650px}.eyebrow{font-size:11px;color:#aeb6ff;letter-spacing:2px;font-weight:800}.hero h1{font-size:clamp(48px,7vw,88px);line-height:.88;letter-spacing:-5px;margin:12px 0}.hero p{color:#a7acba;max-width:550px;font-size:14px;line-height:1.6}.buttons{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}.primary{border:0;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;padding:12px 17px;border-radius:11px;font-weight:800}.secondary{background:#171a23;border:1px solid var(--line);color:#fff;padding:12px 17px;border-radius:11px}
+.section{margin-top:28px}.section h2{font-size:20px;margin:0 0 14px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:13px}.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:10px;position:relative;overflow:hidden;transition:.2s}.card:hover{transform:translateY(-3px);border-color:#ffffff20}.cover{height:165px;border-radius:11px;background:linear-gradient(145deg,#262b3a,#11131a);display:grid;place-items:center;font-size:42px;position:relative;overflow:hidden}.cover img{width:100%;height:100%;display:block;object-fit:cover;transition:transform .35s ease,filter .35s ease}.card:hover .cover img{transform:scale(1.045);filter:saturate(1.08)}.cover:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 48%,rgba(0,0,0,.35));pointer-events:none}.card h3{font-size:14px;margin:10px 2px 2px}.muted{color:var(--muted);font-size:12px}.cardplay{position:absolute;right:17px;top:136px;width:37px;height:37px;border-radius:50%;border:1px solid #ffffff20;background:#fff;color:#08090d}.featured{grid-column:span 2}.featured .cover{height:215px;background:linear-gradient(145deg,#292d3e,#11131a)}
+/* polished like button */
+.like{position:absolute;right:9px;bottom:8px;width:36px;height:36px;border-radius:50%;background:#171a22;border:1px solid var(--line);color:#a7adbb;font-size:18px;display:grid;place-items:center;transition:.2s}.like:hover{transform:scale(1.08);background:#232633}.like.on{color:#ff6b9d;border-color:#ff6b9d44;background:#351827;box-shadow:0 0 18px #ff4f8a22}.like.on::after{content:"";position:absolute;width:6px;height:6px;background:#ff6b9d;border-radius:50%;animation:heartdot .35s ease-out}.like:active{transform:scale(.88)}
+@keyframes heartdot{from{transform:scale(.3);opacity:1}to{transform:scale(3);opacity:0}}
+.row{display:flex;align-items:center;gap:12px;padding:10px;background:var(--panel);border:1px solid var(--line);border-radius:12px}.row+.row{margin-top:7px}.grow{flex:1;min-width:0}.grow b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.row small{color:var(--muted)}
+.player{position:fixed;left:235px;right:0;bottom:0;z-index:30;background:rgba(10,11,16,.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid rgba(255,255,255,.10);padding:11px 20px 12px;box-shadow:0 -14px 40px rgba(0,0,0,.28)}
+.player-top{display:grid;grid-template-columns:minmax(210px,260px) auto minmax(260px,1fr) 112px;align-items:center;gap:18px;min-height:58px}
+.now-wrap{display:flex;align-items:center;gap:11px;min-width:0}.now-cover{width:48px;height:48px;flex:0 0 48px;border-radius:12px;background:linear-gradient(145deg,#2d3446,#12141a);display:grid;place-items:center;font-size:18px;overflow:hidden;position:relative;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}.now-cover img{width:100%;height:100%;object-fit:cover;display:block}.now{min-width:0;width:auto}.now b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px}.now small{display:block;color:var(--muted);font-size:11px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.controls{display:flex;align-items:center;justify-content:center;gap:7px}.control{width:36px;height:36px;border-radius:50%;background:#171a22;border:1px solid rgba(255,255,255,.10);color:#fff;display:grid;place-items:center;padding:0;line-height:1;font-size:13px;transition:transform .16s,background .16s,border-color .16s}.control:hover{transform:translateY(-1px);background:#202431;border-color:rgba(255,255,255,.18)}.control-main{width:44px;height:44px;border-radius:50%;background:#fff;color:#08090d;border:0;font-size:15px;box-shadow:0 5px 18px rgba(255,255,255,.12)}.control-main:hover{background:#f2f2f4;transform:scale(1.04)}
+.timeline{min-width:0;display:grid;grid-template-columns:38px minmax(0,1fr) 38px;align-items:center;gap:9px}.timeline span{font-size:10px;color:#9ca2b1;font-variant-numeric:tabular-nums;text-align:center}.timeline input{width:100%;height:4px;margin:0;accent-color:var(--accent);cursor:pointer}.volume-wrap{display:flex;align-items:center;gap:8px;color:#8f95a5}.volume-wrap span{font-size:13px}.volume{width:82px;height:4px;accent-color:var(--accent);cursor:pointer}.wave{display:none}.toast{position:fixed;right:18px;bottom:100px;padding:11px 14px;border:1px solid var(--line);background:#171a22;color:#fff;border-radius:11px;z-index:50;display:none}
+.modal{position:fixed;inset:0;background:#000b;z-index:60;display:none;place-items:center;padding:18px}.modal.open{display:grid}.modalbox{width:min(720px,100%);max-height:85vh;overflow:auto;background:#0e1016;border:1px solid var(--line);border-radius:20px;padding:22px}.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.choice{height:125px;border-radius:14px;border:1px solid var(--line);background-size:cover;background-position:center;color:#fff;font-weight:800;text-shadow:0 2px 10px #000;position:relative;overflow:hidden}.choice span{position:absolute;left:12px;bottom:10px}.hidden{display:none!important}
+@media(max-width:850px){
+ body{background:#07080c}.noise,#space{display:none}.bg-image{opacity:.13!important}
+ .side{left:0;right:0;top:auto;bottom:0;width:100%;height:67px;padding:5px 6px;background:#090a0f;border:0;border-top:1px solid var(--line)}
+ .brand,.nav-title{display:none}.nav{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;height:100%}.nav button{height:56px;padding:4px 2px;text-align:center;display:flex;align-items:center;justify-content:center;flex-direction:column;font-size:9px!important;line-height:1.15;white-space:nowrap;overflow:hidden}.nav button.active{box-shadow:inset 0 -2px var(--accent)}
+ .main{margin:0;width:100%;padding:8px 9px 144px}.top{position:sticky;top:0;z-index:15;padding:3px 0 9px;margin:0;background:#07080ce8}.search{height:41px;min-width:0}.top-spacer,.top .smallbtn{display:none}
+ .hero{min-height:345px;border-radius:19px;padding:23px 18px;box-shadow:none}.hero:before{filter:none;width:260px;height:260px}.hero h1{font-size:50px;letter-spacing:-3px}.hero p{font-size:12px}.primary,.secondary{padding:10px 13px;font-size:12px}
+ .section{margin-top:20px}.section h2{font-size:18px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.card{border-radius:13px;padding:8px}.card:hover{transform:none}.cover{height:126px;border-radius:9px;font-size:34px}.cardplay{top:98px;right:14px;width:34px;height:34px}.card h3{font-size:12px}.muted{font-size:10px}.featured{grid-column:span 2}.featured .cover{height:165px}
+ .like{width:33px;height:33px;bottom:7px;right:7px}.player{left:0;right:0;bottom:67px;padding:8px 10px 12px}.player-top{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"now controls" "timeline timeline";gap:7px 10px;min-height:70px}.now-wrap{grid-area:now}.now-cover{width:41px;height:41px;flex:0 0 41px}.now b{font-size:12px}.now small{font-size:10px}.controls{grid-area:controls}.control{width:32px;height:32px;font-size:10px}.control-main{width:38px;height:38px;font-size:13px}.volume-wrap{display:none}.timeline{grid-area:timeline;grid-template-columns:31px minmax(0,1fr) 31px;gap:6px}.timeline span{font-size:9px}.timeline input{height:4px}.toast{left:10px;right:10px;bottom:140px;text-align:center}.choices{gap:7px}.choice{height:90px}
+}
+@media(max-width:380px){.nav button{font-size:8px!important}.hero h1{font-size:44px}.cover{height:115px}.cardplay{top:87px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+
+/* TNZ v7 — mobile-first refresh */
+:root{--player-accent:var(--accent);--radius:16px}
+.theme-surface{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px}
+.settings-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.settings-title{font-size:17px;font-weight:850}.settings-sub{color:var(--muted);font-size:12px;margin-top:3px}
+.setting-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
+.setting-row:last-child{border-bottom:0}.setting-left{min-width:0}.setting-left b{font-size:13px}.setting-left span{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+.switch{position:relative;width:34px;height:20px;flex:0 0 34px}.switch input{opacity:0;width:0;height:0}.switch i{position:absolute;inset:0;border-radius:99px;background:#343740;transition:.2s}.switch i:before{content:"";position:absolute;width:16px;height:16px;left:2px;top:2px;border-radius:50%;background:#fff;transition:.2s}.switch input:checked+i{background:var(--accent)}.switch input:checked+i:before{transform:translateX(14px)}
+.swatches{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.swatch{width:38px;height:38px;border-radius:11px;border:2px solid transparent;box-shadow:inset 0 0 0 1px #ffffff24;transition:.18s}.swatch.active{border-color:#fff;transform:translateY(-2px);box-shadow:0 0 0 2px var(--accent)}
+.theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:12px}.theme-card{min-height:76px;border-radius:14px;border:1px solid var(--line);padding:10px;color:#fff;text-align:left;background:#11131a;position:relative;overflow:hidden}.theme-card b{position:absolute;left:10px;bottom:9px;font-size:11px}.theme-card:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent,#0009)}
+.mobile-more{display:none}.more-modal .modalbox{max-width:420px}.more-list{display:grid;gap:7px}.more-list button{width:100%;text-align:left;background:#151821;border:1px solid var(--line);color:#fff;border-radius:12px;padding:13px}
+.full-player{position:fixed;inset:0;z-index:80;background:rgba(5,6,10,.96);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);display:none;flex-direction:column;padding:18px 18px 28px}.full-player.open{display:flex}.fp-top{display:flex;justify-content:space-between;align-items:center}.fp-close{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:#151821;color:#fff}.fp-cover{width:min(78vw,340px);aspect-ratio:1;border-radius:24px;overflow:hidden;margin:42px auto 24px;background:#151821;box-shadow:0 25px 70px #0008}.fp-cover img{width:100%;height:100%;object-fit:cover}.fp-title{text-align:center;font-size:22px;font-weight:850}.fp-artist{text-align:center;color:var(--muted);margin-top:5px}.fp-time{display:flex;justify-content:space-between;color:#9ca2b1;font-size:11px;margin-top:18px}.fp-seek{width:100%;accent-color:var(--accent)}.fp-controls{display:flex;justify-content:center;align-items:center;gap:16px;margin:24px 0}.fp-controls .control{width:48px;height:48px}.fp-controls .control-main{width:62px;height:62px;font-size:19px}.fp-volume{display:flex;align-items:center;gap:10px}.fp-volume input{flex:1;accent-color:var(--accent)}
+.player{padding-bottom:max(12px,env(safe-area-inset-bottom))}
+@media(max-width:850px){
+ .main{padding-bottom:160px}.top{gap:7px}.search{border-radius:12px}
+ .side{height:64px;padding:5px 5px calc(5px + env(safe-area-inset-bottom));}
+ .nav{grid-template-columns:repeat(5,1fr)}
+ .nav button:nth-child(n+6){display:none}.nav button{height:52px;font-size:9px!important}
+ .nav button:nth-child(5){display:flex}
+ .mobile-more{display:flex;position:fixed;right:10px;bottom:76px;z-index:36;width:42px;height:42px;border-radius:50%;align-items:center;justify-content:center;background:var(--accent);color:#fff;border:0;box-shadow:0 10px 25px #0006}
+ .player{bottom:64px;padding:7px 10px 9px;border-radius:16px 16px 0 0}
+ .player-top{min-height:76px;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"now controls" "timeline timeline";gap:6px 8px}
+ .now-wrap{cursor:pointer}.now-cover{width:42px;height:42px;flex-basis:42px;border-radius:10px}.now b{font-size:12px}.now small{font-size:10px}
+ .controls{gap:5px}.control{width:34px;height:34px}.control-main{width:40px;height:40px}
+ .timeline{grid-template-columns:31px minmax(0,1fr) 31px;gap:5px}.timeline input{height:5px}
+ .volume-wrap{display:none}
+ .hero{min-height:310px;padding:22px 17px}.hero h1{font-size:46px}.hero p{max-width:330px}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.cover{height:128px}.cardplay{top:100px}
+ .theme-grid{grid-template-columns:repeat(2,1fr)}.theme-surface{padding:15px;border-radius:16px}
+}
+@media(min-width:851px){.full-player{display:none!important}}
+
+/* TNZ v8 — fresh low-lag interface */
+:root{
+ --bg:#07080d;--panel:rgba(16,18,25,.88);--panel2:#151925;
+ --accent:#7c8cff;--accent2:#a56bff;--line:rgba(255,255,255,.09);
+ --shadow:0 22px 70px rgba(0,0,0,.34)
+}
+body{background:radial-gradient(circle at 80% -10%,color-mix(in srgb,var(--accent) 10%,transparent),transparent 34%),var(--bg)}
+.brand{padding:7px 10px 28px;height:74px}.brand img{width:188px;height:auto;display:block}
+.nav button{position:relative}.nav button.active{background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 14%,transparent),transparent);color:#fff;box-shadow:inset 3px 0 var(--accent)}
+.hero{min-height:390px;border-radius:28px;background:linear-gradient(135deg,#121520,#0b0d14 56%,#121322);box-shadow:var(--shadow)}
+.hero:before{width:430px;height:430px;right:-120px;top:-180px;background:radial-gradient(circle,color-mix(in srgb,var(--accent) 42%,transparent),transparent 68%);filter:blur(18px);opacity:.7}
+.eyebrow{display:flex;align-items:center;gap:8px;color:#c3c8ff}.live-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 14px var(--accent)}
+.hero h1{font-weight:950;letter-spacing:-6px}.hero p{color:#9da4b5}
+.card{background:linear-gradient(180deg,rgba(22,25,34,.92),rgba(13,15,21,.92));border-radius:19px;padding:9px;box-shadow:0 8px 26px rgba(0,0,0,.16);transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+.card:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--accent) 28%,var(--line));box-shadow:0 14px 35px rgba(0,0,0,.25)}
+.cover{border-radius:14px;background:#12151e;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+.cover img{transition:transform .28s ease}.card:hover .cover img{transform:scale(1.035)}
+.cardplay{background:#fff;color:#0b0c10;border:0;box-shadow:0 8px 20px #0007;transition:transform .18s ease,box-shadow .18s ease}
+.cardplay:hover{transform:scale(1.08);box-shadow:0 10px 26px color-mix(in srgb,var(--accent) 25%,#000)}
+.like{backdrop-filter:none}.like.on{color:#ff6f9d}
+.player{transform:translateY(120%);opacity:0;pointer-events:none;transition:transform .32s cubic-bezier(.2,.8,.2,1),opacity .22s ease;padding:10px 18px 12px;background:rgba(9,10,15,.96);box-shadow:0 -18px 50px rgba(0,0,0,.42)}
+.player.has-track{transform:translateY(0);opacity:1;pointer-events:auto}.player.is-playing{transform:translateY(0);opacity:1;pointer-events:auto}
+.player-top{min-height:62px;grid-template-columns:minmax(220px,280px) auto minmax(260px,1fr) 120px}
+.now-wrap{cursor:pointer}.now-cover{width:52px;height:52px;flex-basis:52px;border-radius:14px;box-shadow:0 8px 25px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.08)}
+.player.is-playing .now-cover{box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 28%,transparent),0 0 28px color-mix(in srgb,var(--accent) 16%,transparent)}
+.player.is-playing .now-cover:before{content:"";position:absolute;z-index:2;left:6px;bottom:6px;width:3px;height:9px;border-radius:3px;background:var(--accent);box-shadow:5px -5px 0 var(--accent),10px -2px 0 var(--accent);animation:eq .75s ease-in-out infinite alternate}
+@keyframes eq{from{transform:scaleY(.55)}to{transform:scaleY(1.25)}}
+.control{transition:transform .16s ease,background .16s ease}.control-main{background:var(--accent);color:#08090d;box-shadow:0 7px 25px color-mix(in srgb,var(--accent) 30%,transparent)}
+.player-open-btn{font-size:12px}
+.timeline input,.volume{accent-color:var(--accent)}
+.full-player{background:radial-gradient(circle at 50% 15%,color-mix(in srgb,var(--accent) 13%,transparent),transparent 32%),rgba(5,6,10,.98)}
+.fp-cover{border-radius:28px;box-shadow:0 30px 90px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.06)}
+.fp-seek,.fp-volume input{accent-color:var(--accent)}
+.theme-surface{background:linear-gradient(180deg,rgba(20,22,30,.96),rgba(12,14,20,.96));box-shadow:var(--shadow)}
+.setting-row{min-height:61px}.swatch{width:40px;height:40px;border-radius:12px}
+.search{background:#10131b;border-color:rgba(255,255,255,.1);height:44px}
+.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 9px 24px color-mix(in srgb,var(--accent) 18%,transparent)}
+.secondary,.smallbtn{background:#131620;border-color:rgba(255,255,255,.1)}
+.toast{background:#151821;box-shadow:0 15px 45px #0008}
+
+/* mobile — redesigned as an app shell */
+@media(max-width:850px){
+ .main{padding:8px 10px 128px}
+ .top{gap:7px;padding:4px 0 10px}.search{height:43px;border-radius:14px}
+ .hero{min-height:330px;border-radius:22px;padding:20px 18px}
+ .hero h1{font-size:50px;letter-spacing:-4px}
+ .section{margin-top:22px}.grid{gap:9px}.card{padding:8px;border-radius:16px}
+ .cover{height:132px;border-radius:11px}.cardplay{top:103px}
+ .featured .cover{height:178px}.featured .cardplay{top:149px}
+ .player{left:8px;right:8px;bottom:74px;border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:8px 9px 10px;box-shadow:0 14px 45px rgba(0,0,0,.5);transform:translateY(140%);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+ .player.has-track{transform:translateY(0)} .player.is-playing{transform:translateY(0)}
+ .player-top{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"now controls" "timeline timeline";gap:7px 8px;min-height:69px}
+ .now-wrap{min-width:0}.now-cover{width:43px;height:43px;flex-basis:43px;border-radius:12px}
+ .now b{font-size:12px}.now small{font-size:10px}
+ .controls{gap:4px}.control{width:32px;height:32px}.control-main{width:38px;height:38px}
+ .player-open-btn{display:none}.volume-wrap{display:none}
+ .timeline{grid-template-columns:31px minmax(0,1fr) 31px;gap:6px}
+ .side{height:68px;background:rgba(8,9,13,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+ .nav button{font-weight:700}
+ .full-player{padding:16px 16px 25px}
+ .fp-cover{width:min(78vw,340px);margin:36px auto 22px}
+ .fp-title{font-size:20px}
+}
+@media(max-width:420px){
+ .main{padding-left:8px;padding-right:8px}
+ .hero{min-height:305px;padding:18px 15px}.hero h1{font-size:45px}
+ .cover{height:122px}.cardplay{top:94px}
+ .featured .cover{height:160px}.featured .cardplay{top:132px}
+ .player{left:6px;right:6px}
+}
+@media(prefers-reduced-motion:reduce){
+ .player,.card,.cover img,.control{transition:none!important}
+ .player.is-playing .now-cover:before{animation:none}
+}
+
+</style>
+
+</head>
+<body>
+<canvas id="space"></canvas><div class="bg-image" id="bg"></div><div class="noise"></div>
+<div class="app">
+<aside class="side">
+<div class="brand"><img src="brand/tn-logo.svg" alt="TNZ Music Pro"></div>
+<div class="nav-title">Музыка</div>
+<nav class="nav">
+<button class="active" data-page="home">⌂ Главная</button>
+<button data-page="wave">◉ Моя волна</button>
+<button data-page="liked">♡ Мне нравится</button>
+<button data-page="songs">♫ Все песни</button>
+<button data-page="new">✦ Новинки</button>
+<button data-page="mood">☾ Настроения</button>
+<button data-page="history">◷ История</button>
+<button data-page="collections">▦ Коллекции</button>
+<button data-page="artists">♟ Исполнители</button>
+<button data-page="settings">⚙ Настройки</button>
+</nav>
+</aside>
+<button class="mobile-more" onclick="openMore()" aria-label="Ещё">•••</button>
+<main class="main">
+<div class="top">
+<input id="search" class="search" placeholder="Поиск песни или исполнителя...">
+<div class="top-spacer"></div>
+<button class="smallbtn" id="wallBtn">Обои</button><button class="smallbtn" id="themeBtn">Цвет</button>
+</div>
+
+<section id="homePage">
+<div class="hero">
+<div class="hero-content"><div class="eyebrow"><span class="live-dot"></span> TNZ MUSIC PRO • NIGHT MODE</div><h1>Моя<br>волна.</h1><p>Музыка, которая звучит по-своему. Ночной интерфейс, живой фон и твоя персональная подборка.</p><div class="buttons"><button class="primary" onclick="play(0)">▶ Слушать музыку</button><button class="secondary" onclick="openWallpapers()">✦ Настроить обои</button></div></div>
+</div>
+<div class="section"><h2>Сейчас слушают</h2><div class="grid" id="featured"></div></div>
+<div class="section"><h2>Тебе может понравиться</h2><div class="grid" id="homeSongs"></div></div>
+</section>
+
+<section class="section hidden" id="wavePage"><h2>Моя волна</h2><p class="muted">Персональная лента из твоих песен.</p><div class="grid" id="waveGrid"></div></section>
+<section class="section hidden" id="likedPage"><h2>Мне нравится</h2><div id="likedList"></div></section>
+<section class="section hidden" id="songsPage"><h2>Все песни</h2><div class="grid" id="songsGrid"></div></section>
+<section class="section hidden" id="newPage"><h2>Новые песни</h2><div class="grid" id="newGrid"></div></section>
+<section class="section hidden" id="moodPage"><h2>Настроения</h2><div class="grid" id="moodGrid"></div></section>
+<section class="section hidden" id="historyPage"><h2>История</h2><div id="historyList"></div></section>
+<section class="section hidden" id="collectionsPage"><h2>Коллекции</h2><div class="grid" id="collectionGrid"></div></section>
+<section class="section hidden" id="artistsPage"><h2>Исполнители</h2><div class="grid" id="artistGrid"></div></section>
+<section class="section hidden" id="settingsPage"><h2>Интерфейс и тема</h2>
+<div class="theme-surface">
+<div class="settings-head"><div><div class="settings-title">Собственная тема</div><div class="settings-sub">Цвета применяются сразу и сохраняются на телефоне.</div></div><label class="switch"><input id="customTheme" type="checkbox" checked onchange="setCustomTheme(this.checked)"><i></i></label></div>
+<div class="swatches" id="swatches">
+<button class="swatch active" style="background:#ffd21f" data-c="#ffd21f" onclick="accent('#ffd21f',this)" aria-label="Жёлтый"></button>
+<button class="swatch" style="background:#4c9cff" data-c="#4c9cff" onclick="accent('#4c9cff',this)" aria-label="Синий"></button>
+<button class="swatch" style="background:#2ecb35" data-c="#2ecb35" onclick="accent('#2ecb35',this)" aria-label="Зелёный"></button>
+<button class="swatch" style="background:#ef4148" data-c="#ef4148" onclick="accent('#ef4148',this)" aria-label="Красный"></button>
+<button class="swatch" style="background:#b94bdd" data-c="#b94bdd" onclick="accent('#b94bdd',this)" aria-label="Фиолетовый"></button>
+<button class="swatch" style="background:#ed55b9" data-c="#ed55b9" onclick="accent('#ed55b9',this)" aria-label="Розовый"></button>
+</div>
+<div class="setting-row"><div class="setting-left"><b>Заменить цвет в плеере</b><span>Цвет кнопок и прогресса плеера</span></div><label class="switch"><input id="playerAccentToggle" type="checkbox" checked onchange="togglePlayerAccent(this.checked)"><i></i></label></div>
+<div class="setting-row"><div class="setting-left"><b>Отключить анимацию «Моей волны»</b><span>Уменьшает нагрузку на телефон</span></div><label class="switch"><input id="waveAnimToggle" type="checkbox" onchange="toggleWaveAnimation(this.checked)"><i></i></label></div>
+<div class="setting-row"><div class="setting-left"><b>Убрать уведомление 18+</b><span>Скрывает информационное уведомление</span></div><label class="switch"><input id="adultToggle" type="checkbox" checked onchange="toggleAdult(this.checked)"><i></i></label></div>
+<div class="setting-row"><div class="setting-left"><b>Обои</b><span>Фон сайта и собственная картинка</span></div><button class="smallbtn" onclick="openWallpapers()">Изменить</button></div>
+<div class="setting-row"><div class="setting-left"><b>Мобильный плеер</b><span>Нажми на название трека внизу, чтобы открыть полный экран</span></div><button class="smallbtn" onclick="openFullPlayer()">Открыть</button></div>
+</div></section>
+<section class="section hidden" id="searchPage"><h2>Поиск</h2><div class="grid" id="searchGrid"></div></section>
+</main></div>
+
+<div class="player">
+<div class="player-top">
+<div class="now-wrap" onclick="openFullPlayer()" role="button" tabindex="0" aria-label="Открыть плеер">
+<div class="now-cover" id="nowIcon">♪</div>
+<div class="now"><b id="nowTitle">Выбери песню</b><small id="nowArtist">tnzmusicpro</small></div>
+</div>
+<div class="controls"><button class="control" onclick="prev()" aria-label="Предыдущая">⏮</button><button class="control control-main" id="playBtn" onclick="toggle()" aria-label="Воспроизведение">▶</button><button class="control" onclick="next()" aria-label="Следующая">⏭</button><button class="control player-open-btn" onclick="openFullPlayer()" aria-label="Открыть плеер">↗</button></div>
+<div class="timeline"><span id="cur">0:00</span><input id="seek" type="range" min="0" max="100" value="0"><span id="dur">0:00</span></div>
+<div class="volume-wrap"><span>🔊</span><input class="volume" id="volume" type="range" min="0" max="1" step=".01" value=".8"></div>
+</div></div>
+<audio id="audio" preload="metadata" playsinline></audio><div class="toast" id="toast"></div>
+
+<div class="modal" id="wallModal"><div class="modalbox">
+<h2>Обои и оформление</h2><p class="muted">Выбери спокойный фон, 3D-картинку или загрузи свою.</p>
+<div class="choices">
+<button class="choice" style="background:linear-gradient(135deg,#10131a,#263248)" onclick="setBg('')"><span>Тёмный минимализм</span></button>
+<button class="choice" style="background:radial-gradient(circle at 65% 25%,#6b7899,#1a1d26 35%,#07080c 75%)" onclick="setGenerated('space')"><span>Глубокий космос</span></button>
+<button class="choice" style="background:linear-gradient(135deg,#22252e,#090a0e 60%,#343a48)" onclick="setGenerated('steel')"><span>Стальной 3D</span></button>
+<button class="choice" style="background:linear-gradient(135deg,#1e2632,#121820 45%,#26322c)" onclick="setGenerated('forest')"><span>Тёмный лес</span></button>
+<button class="choice" style="background:linear-gradient(135deg,#201c2a,#11121a 50%,#302b22)" onclick="setGenerated('cinema')"><span>Кино</span></button>
+<button class="choice" style="background:linear-gradient(135deg,#18232c,#0c1117 50%,#202b36)" onclick="setGenerated('ocean')"><span>Ночная вода</span></button>
+</div>
+<div style="margin-top:14px"><label class="secondary" style="display:inline-block">Загрузить свои обои <input id="fileBg" type="file" accept="image/*" style="display:none"></label></div>
+<div style="margin-top:18px"><b>Цвет</b><div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:9px"><button class="smallbtn" onclick="accent('#7c8cff')">Синий</button><button class="smallbtn" onclick="accent('#b68cff')">Фиолетовый</button><button class="smallbtn" onclick="accent('#62d9c8')">Бирюзовый</button><button class="smallbtn" onclick="accent('#ff7f9f')">Розовый</button></div></div>
+<button class="secondary" style="margin-top:18px" onclick="closeWallpapers()">Закрыть</button>
+</div></div>
+
+<div class="modal more-modal" id="moreModal"><div class="modalbox"><div class="settings-head"><div><div class="settings-title">Ещё разделы</div><div class="settings-sub">Все разделы сайта</div></div><button class="fp-close" onclick="closeMore()">×</button></div><div class="more-list" id="moreList"></div></div></div>
+<div class="full-player" id="fullPlayer"><div class="fp-top"><b>Сейчас играет</b><button class="fp-close" onclick="closeFullPlayer()">×</button></div><div class="fp-cover" id="fpCover">♪</div><div class="fp-title" id="fpTitle">Выбери песню</div><div class="fp-artist" id="fpArtist">tnzmusicpro</div><div class="fp-time"><span id="fpCur">0:00</span><span id="fpDur">0:00</span></div><input class="fp-seek" id="fpSeek" type="range" min="0" max="100" value="0"><div class="fp-controls"><button class="control" onclick="prev()">⏮</button><button class="control control-main" id="fpPlay" onclick="toggle()">▶</button><button class="control" onclick="next()">⏭</button></div><div class="fp-volume"><span>🔊</span><input id="fpVolume" type="range" min="0" max="1" step=".01" value=".8"></div></div>
+<script>
+const songs = [{"title": "Династия", "artist": "SKY RAE", "file": "music/VILLIAN_madk1d_-_DINASTIYA_81965580.mp3", "icon": "✦", "cover": "https://image-cdn-fa.spotifycdn.com/image/ab6761610000f1786f057bf862ca1f64fb99dc7a"}, {"title": "Купер", "artist": "SQWOZ BAB", "file": "music/SQWOZ_BAB_-_KUPER_80616287.mp3", "icon": "◆", "cover": "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e02da67945924bd52e2294348b8"}, {"title": "Экспонат", "artist": "Мия Бойка", "file": "music/Mia_Boyka_-_JEksponat_81528350.mp3", "icon": "●", "cover": "https://avatars.yandex.net/get-music-content/20372582/82527af1.a.41976933-2/600x600"}, {"title": "Шадже", "artist": "INDIYA × XCHO × MOT", "file": "music/By_Indiya_Xcho_MOT_-_SHadje_81430189.mp3", "icon": "☾", "cover": "https://freshrecords.net/gmp3.php?fid=2396081"}, {"title": "Наследство", "artist": "SKY RAE", "file": "music/ICEGERGRT_SKY_RAE_-_Nasledstvo_kak_original_79483928.mp3", "icon": "✦", "cover": "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e02fa35879029b0cf5bb8e3bd75"}, {"title": "Последняя любовь", "artist": "MORGENSHTERN", "file": "music/morgenshtern_-_Poslednyaya_Lyubov_77560558.mp3", "icon": "◆", "cover": "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e0206d115628b77ec4b64232d0b"}, {"title": "Дофамин", "artist": "YungMeechy", "file": "music/YungMeechy_-_Dofamin_81347750.mp3", "icon": "●", "cover": "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e02ac79a0e82fd8d187342fea98"}, {"title": "Ты не бойся ночи", "artist": "ENZRO", "file": "music/ENZRO_-_Ty_ne_bojjsya_nochi_81423717 (1).mp3", "icon": "♥", "cover": "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e02b64e9958d46bd63eb1490efb"}, {"title": "Василина", "artist": "Dzidzo feat. Ivan Popovich", "file": "music/Dzidzo_feat_Ivan_Popovich_-_Vasilina_-_Vasilina_74363101.mp3", "icon": "☾", "cover": "https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e0235cd272ffdc3073b81f55c6b"}, {"title": "БАНК", "artist": "Icegergert × Zivert", "file": "music/Zivert, Icegergert - БАНК.mp3", "icon": "₿", "cover": "covers/bank.svg"}, {"title": "Никотин", "artist": "Ganvest", "file": "music/Ganvest_-_Nikotin_59857405.mp3", "icon": "N", "cover": "covers/nikotin.svg"}, {"title": "ЕВЕРЕСТ", "artist": "INSTASAMKA", "file": "music/INSTASAMKA_-_JEVEREST_81667714.mp3", "icon": "▲", "cover": "covers/everest.svg"}, {"title": "я не счастлив — Slowed", "artist": "STAKILLAZ", "file": "music/STAKILLAZ_-_ya_ne_schastliv_-_Slowed_80521169.mp3", "icon": "∿", "cover": "covers/STAKILLAZ_-_ya_ne_schastliv_-_Slowed_80521169_embedded.jpg"}]
+let idx=-1, liked=JSON.parse(localStorage.tnzLiked||"[]"), history=JSON.parse(localStorage.tnzHistory||"[]");
+const audio=document.getElementById("audio");
+function esc(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function coverHtml(s, cls="cover"){return s.cover ? `<div class="${cls}"><img src="${s.cover}" alt="Обложка ${esc(s.title)}" loading="lazy" onerror="this.style.display='none';this.parentElement.classList.add('cover-fallback');this.parentElement.textContent='${s.icon}'"> </div>` : `<div class="${cls}">${s.icon}</div>`}
+function card(s,i){return `<article class="card">${coverHtml(s)}<button class="cardplay" onclick="play(${i})">▶</button><h3>${esc(s.title)}</h3><div class="muted">${esc(s.artist)}</div><button class="like ${liked.includes(i)?'on':''}" title="${liked.includes(i)?'Убрать из понравившихся':'Мне нравится'}" onclick="like(${i})">${liked.includes(i)?'♥':'♡'}</button></article>`}
+function render(){
+ document.getElementById("featured").innerHTML=songs.slice(-4).map((s,i)=>card(s,songs.length-4+i)).join("");
+ document.getElementById("homeSongs").innerHTML=songs.map((s,i)=>card(s,i)).join("");
+ ["waveGrid","songsGrid","moodGrid","collectionGrid"].forEach(id=>document.getElementById(id).innerHTML=songs.map((s,i)=>card(s,i)).join("")); document.getElementById("newGrid").innerHTML=songs.slice(-4).map((s,i)=>card(s,songs.length-4+i)).join("");
+ document.getElementById("artistGrid").innerHTML=[...new Set(songs.map(s=>s.artist))].map((a,i)=>`<article class="card"><div class="cover">♟</div><h3>${esc(a)}</h3><div class="muted">Исполнитель</div></article>`).join("");
+ renderLiked();renderHistory();
+}
+function play(i){idx=i;audio.src=songs[i].file;audio.load();audio.play().then(()=>setPlaying(true)).catch(()=>setPlaying(false));document.getElementById("nowTitle").textContent=songs[i].title;document.getElementById("nowArtist").textContent=songs[i].artist;document.getElementById("nowIcon").innerHTML=songs[i].cover?`<img src="${songs[i].cover}" alt="">`:songs[i].icon;document.getElementById("fpTitle").textContent=songs[i].title;document.getElementById("fpArtist").textContent=songs[i].artist;document.getElementById("fpCover").innerHTML=songs[i].cover?`<img src="${songs[i].cover}" alt="Обложка">`:songs[i].icon;history=[i,...history.filter(x=>x!==i)].slice(0,20);localStorage.tnzHistory=JSON.stringify(history);renderHistory()}
+function toggle(){if(idx<0){play(0);return} if(audio.paused){audio.play().then(()=>setPlaying(true));}else{audio.pause();setPlaying(false)}}
+function setPlaying(on){document.getElementById("playBtn").textContent=on?"Ⅱ":"▶";document.getElementById("fpPlay").textContent=on?"Ⅱ":"▶";const p=document.querySelector(".player");p.classList.toggle("has-track",idx>=0);p.classList.toggle("is-playing",on);document.body.classList.toggle("player-open",on);}
+function next(){play((idx+1)%songs.length)}function prev(){play((idx-1+songs.length)%songs.length)}
+audio.addEventListener("timeupdate",()=>{let p=audio.duration?(audio.currentTime/audio.duration*100):0;document.getElementById("seek").value=p;document.getElementById("cur").textContent=fmt(audio.currentTime);document.getElementById("dur").textContent=fmt(audio.duration||0);document.getElementById("fpSeek").value=p;document.getElementById("fpCur").textContent=fmt(audio.currentTime);document.getElementById("fpDur").textContent=fmt(audio.duration||0)});
+audio.addEventListener("play",()=>setPlaying(true));audio.addEventListener("pause",()=>setPlaying(false));audio.addEventListener("ended",next);document.getElementById("seek").oninput=e=>{if(audio.duration)audio.currentTime=audio.duration*e.target.value/100};document.getElementById("volume").oninput=e=>{audio.volume=e.target.value;document.getElementById("fpVolume").value=e.target.value};document.getElementById("fpVolume").oninput=e=>{audio.volume=e.target.value;document.getElementById("volume").value=e.target.value};document.getElementById("fpSeek").oninput=e=>{if(audio.duration)audio.currentTime=audio.duration*e.target.value/100};audio.volume=.8;
+function fmt(x){x=Math.floor(x||0);return Math.floor(x/60)+":"+String(x%60).padStart(2,"0")}
+function like(i){liked=liked.includes(i)?liked.filter(x=>x!==i):[...liked,i];localStorage.tnzLiked=JSON.stringify(liked);render();toast(liked.includes(i)?"Добавлено в «Мне нравится»":"Убрано из «Мне нравится»")}
+function renderLiked(){document.getElementById("likedList").innerHTML=liked.length?liked.map(i=>`<div class="row"><div class="now-cover">${songs[i].icon}</div><div class="grow"><b>${esc(songs[i].title)}</b><small>${esc(songs[i].artist)}</small></div><button class="primary" onclick="play(${i})">▶</button></div>`).join(""):'<div class="card"><p class="muted">Здесь появятся песни, которые тебе понравились.</p></div>'}
+function renderHistory(){document.getElementById("historyList").innerHTML=history.length?history.map(i=>`<div class="row"><div class="grow"><b>${esc(songs[i].title)}</b><small>${esc(songs[i].artist)}</small></div><button class="primary" onclick="play(${i})">▶</button></div>`).join(""):'<div class="card"><p class="muted">История пока пустая.</p></div>'}
+function show(page){document.querySelectorAll("main section").forEach(x=>x.classList.add("hidden"));document.getElementById(page+"Page").classList.remove("hidden");document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page))}
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>show(b.dataset.page));
+document.getElementById("search").addEventListener("input",e=>{show("search");let q=e.target.value.toLowerCase();document.getElementById("searchGrid").innerHTML=songs.filter(s=>(s.title+" "+s.artist).toLowerCase().includes(q)).map((s)=>card(s,songs.indexOf(s))).join("")||'<div class="card">Ничего не найдено</div>'});
+function openWallpapers(){document.getElementById("wallModal").classList.add("open")}function closeWallpapers(){document.getElementById("wallModal").classList.remove("open")}
+function setBg(url){let b=document.getElementById("bg");b.style.backgroundImage=url?`url("${url}")`:"none";b.style.backgroundColor="#07080c";b.style.opacity=url?.16:.01;closeWallpapers();toast("Обои установлены")}
+function setGenerated(kind){const b=document.getElementById("bg");const m={space:"radial-gradient(circle at 65% 20%,#68738e,transparent 28%),linear-gradient(135deg,#05070b,#121925 55%,#030408)",steel:"radial-gradient(circle at 70% 20%,#687181,transparent 24%),linear-gradient(135deg,#080a0e,#272d36 55%,#07080b)",forest:"radial-gradient(circle at 20% 20%,#506657,transparent 23%),linear-gradient(135deg,#060a08,#142018 58%,#050705)",cinema:"radial-gradient(circle at 70% 25%,#6a5948,transparent 20%),linear-gradient(135deg,#0a0909,#252019 55%,#070706)",ocean:"radial-gradient(circle at 55% 15%,#4e7280,transparent 22%),linear-gradient(135deg,#05090c,#10232a 58%,#040708)"};b.style.backgroundImage=m[kind];b.style.opacity=.3;closeWallpapers();toast("Фон изменён")}
+function accent(c,el){document.documentElement.style.setProperty("--accent",c);document.documentElement.style.setProperty("--player-accent",localStorage.tnzPlayerAccent!=="0"?c:"#7c8cff");localStorage.tnzAccent=c;if(el){document.querySelectorAll(".swatch").forEach(x=>x.classList.remove("active"));el.classList.add("active")}}
+function setCustomTheme(on){localStorage.tnzCustomTheme=on?"1":"0";document.getElementById("swatches").style.opacity=on?"1":".45"}
+function togglePlayerAccent(on){localStorage.tnzPlayerAccent=on?"1":"0";document.documentElement.style.setProperty("--player-accent",on?(localStorage.tnzAccent||"#7c8cff"):"#7c8cff")}
+function toggleWaveAnimation(on){localStorage.tnzWaveAnim=on?"0":"1";toast(on?"Анимация отключена":"Анимация включена")}
+function toggleAdult(on){localStorage.tnzAdult=on?"1":"0";toast(on?"Уведомление 18+ включено":"Уведомление 18+ скрыто")}
+function openFullPlayer(){if(idx<0)play(0);document.getElementById("fullPlayer").classList.add("open")}function closeFullPlayer(){document.getElementById("fullPlayer").classList.remove("open")}
+function openMore(){document.getElementById("moreList").innerHTML=[...document.querySelectorAll(".nav button")].slice(5).map(b=>`<button onclick="show('${b.dataset.page}');closeMore()">${b.textContent}</button>`).join("");document.getElementById("moreModal").classList.add("open")}function closeMore(){document.getElementById("moreModal").classList.remove("open")}
+document.getElementById("fileBg").onchange=e=>{let f=e.target.files[0];if(f){document.getElementById("bg").style.backgroundImage=`url("${URL.createObjectURL(f)}")`;document.getElementById("bg").style.opacity=.5;closeWallpapers();toast("Свои обои установлены")}}
+document.getElementById("wallBtn").onclick=openWallpapers;document.getElementById("themeBtn").onclick=openWallpapers;
+function toast(s){let t=document.getElementById("toast");t.textContent=s;t.style.display="block";clearTimeout(window.tt);window.tt=setTimeout(()=>t.style.display="none",1800)}
+if(localStorage.tnzAccent)accent(localStorage.tnzAccent);setBg("");
+if(localStorage.tnzPlayerAccent!=="0")togglePlayerAccent(true);else{document.getElementById("playerAccentToggle").checked=false;togglePlayerAccent(false)}
+if(localStorage.tnzWaveAnim==="0")document.getElementById("waveAnimToggle").checked=true;
+if(localStorage.tnzAdult==="0")document.getElementById("adultToggle").checked=false;
+if(localStorage.tnzCustomTheme==="0")document.getElementById("customTheme").checked=false;
+/* Lightweight background: no continuous canvas animation on mobile/low-power devices. */
+const canvas=document.getElementById("space");
+const reduceMotion=matchMedia("(prefers-reduced-motion: reduce)").matches || innerWidth<=850;
+if(!reduceMotion){
+  const ctx=canvas.getContext("2d"); let stars=[];
+  function resize(){canvas.width=innerWidth;canvas.height=innerHeight;stars=Array.from({length:70},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,z:Math.random()*1.5+.3}))}
+  resize(); addEventListener("resize",resize,{passive:true});
+  function anim(){ctx.clearRect(0,0,canvas.width,canvas.height);for(const st of stars){st.y+=st.z*.12;if(st.y>canvas.height)st.y=0;ctx.fillStyle="rgba(255,255,255,.42)";ctx.fillRect(st.x,st.y,st.z,st.z)}requestAnimationFrame(anim)}
+  anim();
+}
+if("mediaSession" in navigator){audio.addEventListener("loadedmetadata",()=>{if(idx>=0){navigator.mediaSession.metadata=new MediaMetadata({title:songs[idx].title,artist:songs[idx].artist,album:"tnzmusicpro",artwork:songs[idx].cover?[{src:songs[idx].cover,sizes:"600x600"}]:[]})}});navigator.mediaSession.setActionHandler("play",()=>toggle());navigator.mediaSession.setActionHandler("pause",()=>toggle());navigator.mediaSession.setActionHandler("previoustrack",prev);navigator.mediaSession.setActionHandler("nexttrack",next)}
+render();
+</script>
+</body></html>
